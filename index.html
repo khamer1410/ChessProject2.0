@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Szachy projekt Acc</title>
+</head>
+
+<body>
+    <div class="modal">
+        <div class="left-wing"></div>
+        <div class="right-wing"></div>
+    </div>
+    <main>
+        <section class="container">
+            <table id="board"></table>
+        </section>
+        <section id="tools-panel">
+            <div class="tools-section">
+                <form id="game-settings" action="">
+                    <label for="fieldsCount">Number of fields</label>
+                    <input id="fieldsCount" type="number" min="8" step="8" value="64">
+
+                    <fieldset id="figuresCount">
+                        <legend>Figure types</legend>
+                            <label for="pawnCount">Number of pawns</label>
+                            <input id="pawnCount" type="number">
+                            <label for="rookCount">Number of rooks</label>
+                            <input id="rookCount" type="number">
+                    </fieldset>
+
+                    <button id="submit-settings" type="submit">Start New Game</button> 
+                </form>
+            </div>
+        </section>
+    </main>
+    <script src="js/board.js"></script>
+    <script src="js/figures.js"></script>
+    <script src="js/gameRules.js"></script>
+    <script src="js/gameStart.js"></script>
+</body>
+
+</html>
