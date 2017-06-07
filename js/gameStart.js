@@ -13,6 +13,7 @@ App.gameStart = (function() {
         e.preventDefault();
         setCustomGame();
     });
+
     //Default Start
     gameBoard = setNewGame({ size: 64, order: 'random' });
   
@@ -60,12 +61,15 @@ App.gameStart = (function() {
         return true;
     }
 
+
+
     function randomPositioning(fieldsSize, fieldsArr, figuresArr) {
-        for (let j = 0; j < (figuresArr.length); j++) {
+        const figuresArrLength = figuresArr.length;
+        for (let j = 0; j < figuresArrLength; j++) {
             let randomNo = randomFrom(0, fieldsSize - 1);
             let startPostion = fieldsArr[randomNo];     
             let piece = new App.figures.Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
-
+//Tutaj kreowanie figur różnych klas w zależności od nazwy z figuresArr.
             if (startPostion.pawn) {
                 j--;
                 continue;
@@ -86,7 +90,7 @@ App.gameStart = (function() {
                 figuresArr.push(figureName);
         }
         return figuresArr;
-    };
+    }
 
 //ADDITIONAL FUNCTIONS
     function randomFrom(min, max) {

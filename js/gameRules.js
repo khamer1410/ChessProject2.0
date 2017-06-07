@@ -1,5 +1,6 @@
 App.gameRules = (function() {
     "use strict";
+
  //VARIABLES & EVENTS   
     const gameBoard = App.gameStart.gameBoard;
     let activeFieldWithFigure = null;
@@ -19,9 +20,8 @@ App.gameRules = (function() {
         const figureFieldNo = figure.parentNode.getAttribute('data-id');
         activeFieldWithFigure = gameBoard.fields[figureFieldNo];
         const figureOnField = gameBoard.fields[figureFieldNo].pawn;
-        figureOnField
-            .setActive()
-            .getMoves(figureFieldNo);
+        figureOnField.setActive();
+        figureOnField.getMoves(figureFieldNo);
     }
 
     function moveFigure(clickedField) {
@@ -91,26 +91,24 @@ App.gameRules = (function() {
     }
 
 //PROTOTYPES
-    App.figures.Figure.prototype = {
-        getMoves: getMoves,
-        setActive: function() { this.element.classList.add('active'); return this;},
-    };
-//
-    // Figure.prototype = {
+//NIE DZIAŁA :(
+    // App.figures.Figure.prototype = {
     //     getMoves: getMoves,
+    //     //getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
     //     setActive: function () { this.element.classList.add('active'); return this; },
     // };
 
-    function getMoves(fieldNo) {
-        const position = getPosition(fieldNo);
-        const fieldIndex = getFieldNo(position.row, position.col);
-        const activeFigure = gameBoard.fields[fieldIndex].pawn;
 
-        getMovesDown(position, activeFigure);
-        getMovesUp(position, activeFigure);
-        getMovesLeft(position, activeFigure);
-        getMovesRight(position, activeFigure);
-    }
+    // function getMoves(fieldNo) {
+    //     const position = getPosition(fieldNo);
+    //     const fieldIndex = getFieldNo(position.row, position.col);
+    //     const activeFigure = gameBoard.fields[fieldIndex].pawn;
+
+    //     getMovesDown(position, activeFigure);
+    //     getMovesUp(position, activeFigure);
+    //     getMovesLeft(position, activeFigure);
+    //     getMovesRight(position, activeFigure);
+    // }
 
     function getMovesDown(position, figure) {
         for (let i = 1; i <= rowNumber - position.row; i++) {
@@ -166,4 +164,10 @@ App.gameRules = (function() {
     //     sayHi : ()=> alert('hi'),
     // }
 //prototyp figure.pawn, figur.rook
+    return {
+        // getPosition,
+        // getFieldNo,
+        // getMoves,
+    };
+
 })();
