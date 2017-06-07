@@ -1,4 +1,6 @@
-const board = (function() {
+var App = App || {};
+
+App.board = (function() {
     "use strict";
 
     let rowNumber = null;

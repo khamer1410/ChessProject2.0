@@ -1,3 +1,7 @@
+App.gameRules = (function() {
+    "use strict";
+ //VARIABLES & EVENTS   
+    const gameBoard = App.gameStart.gameBoard;
     let activeFieldWithFigure = null;
 
     board.addEventListener('click', (e)=> {
@@ -5,10 +9,12 @@
         pickFigure(e.target);
     });
 
+//FUNCTIONS
     function pickFigure(figure) {
         if (figure.tagName !== 'IMG') return;
         if (figure.parentNode === null) return;     
         clearFieldsSelection();
+        
         //Game operations
         const figureFieldNo = figure.parentNode.getAttribute('data-id');
         activeFieldWithFigure = gameBoard.fields[figureFieldNo];
@@ -85,10 +91,15 @@
     }
 
 //PROTOTYPES
-    Figure.prototype = {
+    App.figures.Figure.prototype = {
         getMoves: getMoves,
         setActive: function() { this.element.classList.add('active'); return this;},
     };
+//
+    // Figure.prototype = {
+    //     getMoves: getMoves,
+    //     setActive: function () { this.element.classList.add('active'); return this; },
+    // };
 
     function getMoves(fieldNo) {
         const position = getPosition(fieldNo);
@@ -154,6 +165,5 @@
     // Figure.pawn.prototype = {
     //     sayHi : ()=> alert('hi'),
     // }
-    
-
 //prototyp figure.pawn, figur.rook
+})();

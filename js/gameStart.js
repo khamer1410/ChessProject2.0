@@ -1,26 +1,24 @@
-// (function() {
+App.gameStart = (function() {
+    "use strict";
+
+//VARIABLES
     let gameBoard = {};
     const startForm = document.getElementById('game-settings');
+    const figuresInGame = { //default numbers
+        pawn: 14,
+        rook: 4,
+    };
 
     startForm.addEventListener('submit',(e)=> {
         e.preventDefault();
         setCustomGame();
     });
-
-    // function init() {
-    //     console.log('game ready!');
-    //     gameBoard = setNewGame({ size: 64, order: 'random' }); //Wzorzec konfiguracji: Patent na dużo argumentów - obiekt konfugurujący z argumentami.
-    //     return gameBoard;
-    // }
-    
-//VARIABLES
-    const figuresInGame = {
-        pawn: 14,
-        rook: 4,
-    };
-
+    //Default Start
+    gameBoard = setNewGame({ size: 64, order: 'random' });
+  
 //FUNCTIONS
-    function setCustomGame() {
+    function setCustomGame() {     
+
         //new settings & validation
         const fieldsNo = startForm.querySelector('#fieldsCount').value;
         const pawn = startForm.querySelector('#pawnCount').value;
@@ -30,20 +28,22 @@
         if (!validateForm(fieldsNo)) return;
 
         //delete previous game
-        document.getElementById('board').innerHTML = "";
+        document.getElementById('board').innerHTML = ""; //można board - gdzie jest zdefiniowane?
         gameBoard = {};
         console.log(gameBoard);
+
         //start new game
         gameBoard = setNewGame({ size: fieldsNo, order: 'random' });
-        console.log(gameBoard);
+        console.log(gameBoard, 'game ready!');
+
     }
 
     function setNewGame(config) {
-        gameBoard = board.Board(config.size);
+        gameBoard = new App.board.Board(config.size);
         const fieldsArr = gameBoard.fields;
         switch (config.order) {
             case 'random':
-                randomPositioning(config.size, fieldsArr, figuresArr(figuresInGame));
+                randomPositioning(config.size, fieldsArr, createFiguresArr(figuresInGame));
                 break;
             case 'ordered':
                 //place for ordered function;        
@@ -64,41 +64,34 @@
         for (let j = 0; j < (figuresArr.length); j++) {
             let randomNo = randomFrom(0, fieldsSize - 1);
             let startPostion = fieldsArr[randomNo];     
-            let piece = figures.Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
+            let piece = new App.figures.Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
 
             if (startPostion.pawn) {
                 j--;
                 continue;
             }
+            
             startPostion.pawn = piece;
             startPostion.td.appendChild(piece.element);
         }
     }
 
-    let figuresArr = function createFiguresArr(figuresObj) {
+    function createFiguresArr(figuresObj) {
         const figuresArr = [];
         let figureName = '';
         for (let figure in figuresObj) {
             figureName = figure;
             const figureCount = figuresObj[figure];
-            for (i = 0; i < figureCount; i++)
+            for (let i = 0; i < figureCount; i++)
                 figuresArr.push(figureName);
         }
         return figuresArr;
-    }
+    };
 
 //ADDITIONAL FUNCTIONS
-
     function randomFrom(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
-
- //INITIALIZE 
-   // init();
-
-    //4 TEST
-    gameBoard = setNewGame({ size: 64, order: 'random' });
-
 
     function orderedPositioning() { //TODO: unfinished
         //     for (let i = 0; i <= fields; i++) {
@@ -124,4 +117,8 @@
         //     }
     }
 
-// })();
+    return {
+        gameBoard,
+    };
+
+})();

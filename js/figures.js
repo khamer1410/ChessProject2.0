@@ -1,4 +1,4 @@
-const figures = (function() {
+App.figures = (function() {
     "use strict";
 
     function Figure(type, color, id) {
