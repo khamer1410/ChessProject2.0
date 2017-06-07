@@ -39,7 +39,7 @@
     }
 
     function setNewGame(config) {
-        let gameBoard = new Board(config.size);
+        gameBoard = board.Board(config.size);
         const fieldsArr = gameBoard.fields;
         switch (config.order) {
             case 'random':
@@ -64,7 +64,7 @@
         for (let j = 0; j < (figuresArr.length); j++) {
             let randomNo = randomFrom(0, fieldsSize - 1);
             let startPostion = fieldsArr[randomNo];     
-            let piece = new Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
+            let piece = figures.Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
 
             if (startPostion.pawn) {
                 j--;

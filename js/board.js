@@ -1,4 +1,4 @@
-// const board = function() {
+const board = (function() {
     "use strict";
 
     let rowNumber = null;
@@ -31,10 +31,10 @@
         this.td.setAttribute('data-id', id);
     }
 
-    // return {
-    //     Board,
-    //     Field,
-    //     rowNumber,
-    // }
+    return {
+        Board,
+        Field,
+        rowNumber,
+    }
 
-// }();
+})();

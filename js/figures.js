@@ -1,4 +1,5 @@
-// var figures = (function() {
+const figures = (function() {
+    "use strict";
 
     function Figure(type, color, id) {
         let self = this;
@@ -15,7 +16,7 @@
             element.type = `${type}`;
 
             element.addEventListener('click', (e)=> {
-                console.log(self);
+                //console.log(self);
             });
             return element;
         }
@@ -37,7 +38,7 @@
         }
     };
 
-//     return {
-//         Figure: Figure(),
-//     };
-// })();
+    return {
+        Figure,
+    };
+})();
