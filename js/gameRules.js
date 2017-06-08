@@ -2,7 +2,7 @@ App.gameRules = (function() {
     "use strict";
 
  //VARIABLES & EVENTS   
-    const gameBoard = App.gameStart.gameBoard;
+    let gameBoard = new App.board.Board(64); //App.gameStart.gameBoard; nie działa bo gameStart jest ładowane po gameRules
     let activeFieldWithFigure = null;
 
     board.addEventListener('click', (e)=> {
@@ -99,19 +99,19 @@ App.gameRules = (function() {
     // };
 
 
-    // function getMoves(fieldNo) {
-    //     const position = getPosition(fieldNo);
-    //     const fieldIndex = getFieldNo(position.row, position.col);
-    //     const activeFigure = gameBoard.fields[fieldIndex].pawn;
+    function getMoves(fieldNo) {
+        const position = getPosition(fieldNo);
+        const fieldIndex = getFieldNo(position.row, position.col);
+        const activeFigure = gameBoard.fields[fieldIndex].pawn;
 
-    //     getMovesDown(position, activeFigure);
-    //     getMovesUp(position, activeFigure);
-    //     getMovesLeft(position, activeFigure);
-    //     getMovesRight(position, activeFigure);
-    // }
+        getMovesDown(position, activeFigure);
+        getMovesUp(position, activeFigure);
+        getMovesLeft(position, activeFigure);
+        getMovesRight(position, activeFigure);
+    }
 
     function getMovesDown(position, figure) {
-        for (let i = 1; i <= rowNumber - position.row; i++) {
+        for (let i = 1; i <= App.board.getRowNumber() - position.row; i++) {
             let checkingRow = position.row + i;
             let checkingFieldNo = getFieldNo(checkingRow, position.col);
             let checkingField = gameBoard.fields[checkingFieldNo];
@@ -165,9 +165,13 @@ App.gameRules = (function() {
     // }
 //prototyp figure.pawn, figur.rook
     return {
-        // getPosition,
-        // getFieldNo,
-        // getMoves,
+        getPosition,
+        getFieldNo,
+        getMoves,
+        getBoard: ()=> {return gameBoard;},
+        setBoard : (newBoard)=> {
+            gameBoard = newBoard;
+        },
     };
 
 })();

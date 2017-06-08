@@ -2,7 +2,7 @@ var App = App || {};
 
 App.board = (function() {
     "use strict";
-
+    let gameBoard = {};
     let rowNumber = null;
 
     function Board(fieldsNo) {
@@ -36,7 +36,7 @@ App.board = (function() {
     return {
         Board,
         Field,
-        rowNumber,
+        getRowNumber: ()=> {return rowNumber;}
     }
 
 })();

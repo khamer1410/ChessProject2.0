@@ -9,21 +9,21 @@ App.figures = (function() {
     }
 
     Figure.prototype = {
-        getMoves: getMoves,
+        //getMoves: getMoves,
         //getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
         setActive: function () { this.element.classList.add('active'); return this; },
     };
 
-    function getMoves(fieldNo) {
-        const position = getPosition(fieldNo);
-        const fieldIndex = getFieldNo(position.row, position.col);
-        const activeFigure = App.gameStart.gameBoard.fields[fieldIndex].pawn;
+    // function getMoves(fieldNo) {
+    //     const position = getPosition(fieldNo);
+    //     const fieldIndex = getFieldNo(position.row, position.col);
+    //     const activeFigure = App.gameStart.gameBoard.fields[fieldIndex].pawn;
 
-        getMovesDown(position, activeFigure);
-        getMovesUp(position, activeFigure);
-        getMovesLeft(position, activeFigure);
-        getMovesRight(position, activeFigure);
-    }
+    //     getMovesDown(position, activeFigure);
+    //     getMovesUp(position, activeFigure);
+    //     getMovesLeft(position, activeFigure);
+    //     getMovesRight(position, activeFigure);
+    // }
 
     function Rook(type, color, id) {
         Figure.call(this, type, color, id);

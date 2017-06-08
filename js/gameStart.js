@@ -1,7 +1,7 @@
 App.gameStart = (function() {
     "use strict";
 
-//VARIABLES
+//VARIABLES & EVENTS
     let gameBoard = {};
     const startForm = document.getElementById('game-settings');
     const figuresInGame = { //default numbers
@@ -9,15 +9,19 @@ App.gameStart = (function() {
         rook: 4,
     };
 
+    document.addEventListener('DOMContentLoaded', defaultStart);
+
     startForm.addEventListener('submit',(e)=> {
         e.preventDefault();
         setCustomGame();
     });
-
-    //Default Start
-    gameBoard = setNewGame({ size: 64, order: 'random' });
   
 //FUNCTIONS
+    function defaultStart() {
+        deleteBoard();
+        gameBoard = setNewGame({ size: 64, order: 'random' }); 
+    }
+
     function setCustomGame() {     
 
         //new settings & validation
@@ -28,19 +32,21 @@ App.gameStart = (function() {
         figuresInGame.rook = rook;
         if (!validateForm(fieldsNo)) return;
 
-        //delete previous game
-        document.getElementById('board').innerHTML = ""; //można board - gdzie jest zdefiniowane?
-        gameBoard = {};
-        console.log(gameBoard);
-
         //start new game
+        deleteBoard();
         gameBoard = setNewGame({ size: fieldsNo, order: 'random' });
         console.log(gameBoard, 'game ready!');
 
     }
 
+    function deleteBoard() {
+        document.getElementById('board').innerHTML = ""; //można board - gdzie jest zdefiniowane?
+        gameBoard = {};
+    }
+
     function setNewGame(config) {
         gameBoard = new App.board.Board(config.size);
+        App.gameRules.setBoard(gameBoard);
         const fieldsArr = gameBoard.fields;
         switch (config.order) {
             case 'random':
@@ -60,8 +66,6 @@ App.gameStart = (function() {
         }
         return true;
     }
-
-
 
     function randomPositioning(fieldsSize, fieldsArr, figuresArr) {
         const figuresArrLength = figuresArr.length;
@@ -122,7 +126,7 @@ App.gameStart = (function() {
     }
 
     return {
-        gameBoard,
+        gameBoard: ()=> {return gameBoard;},
     };
 
 })();
