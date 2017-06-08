@@ -7,30 +7,24 @@ App.figures = (function() {
         this.id = id;
         this.color = color;
     }
+//Alternative class
+    class Figure2 {
+        constructor(type, color, id) {
+            this.element = createElement(type, color, id);
+            this.type = type;
+            this.id = id;
+            this.color = color;
+        }
+    }
 
     Figure.prototype = {
-        //getMoves: getMoves,
-        //getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
+       // getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
         setActive: function () { this.element.classList.add('active'); return this; },
+        getMoves: function(fieldNo) {App.gameRules.getMoves(fieldNo);},
     };
-
-    // function getMoves(fieldNo) {
-    //     const position = getPosition(fieldNo);
-    //     const fieldIndex = getFieldNo(position.row, position.col);
-    //     const activeFigure = App.gameStart.gameBoard.fields[fieldIndex].pawn;
-
-    //     getMovesDown(position, activeFigure);
-    //     getMovesUp(position, activeFigure);
-    //     getMovesLeft(position, activeFigure);
-    //     getMovesRight(position, activeFigure);
-    // }
 
     function Rook(type, color, id) {
         Figure.call(this, type, color, id);
-        this.element = createElement(type, color, id);
-        this.type = type;
-        this.id = id;
-        this.color = color;
     }
 
     function createElement(type, color, id) {

@@ -40,7 +40,7 @@ App.gameStart = (function() {
     }
 
     function deleteBoard() {
-        document.getElementById('board').innerHTML = ""; //można board - gdzie jest zdefiniowane?
+        document.getElementById('board').innerHTML = "";
         gameBoard = {};
     }
 
