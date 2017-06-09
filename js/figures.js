@@ -1,35 +1,66 @@
 App.figures = (function() {
     "use strict";
 
-    function Figure(type, color, id) {
-        this.element = createElement(type, color, id);
-        this.type = type;
+//Alternative class
+    // class Figure2 {
+    //     constructor(type, color, id) {
+    //         this.element = createElement(type, color, id);
+    //         this.type = type;
+    //         this.id = id;
+    //         this.color = color;
+    //     }
+    // }
+    //   //class Pawn extends Figure {};
+
+//CLASS
+    function Figure(color, id) {
+        this.element = ()=> { throw "figure type not defined"; };
         this.id = id;
         this.color = color;
     }
-//Alternative class
-    class Figure2 {
-        constructor(type, color, id) {
-            this.element = createElement(type, color, id);
-            this.type = type;
-            this.id = id;
-            this.color = color;
-        }
+
+    function rook(color, id) {
+        Figure.call(this, color, id);
+        this.type = 'rook';
+        const shape = {
+            white: 'elements/rookW2.png',
+            black: 'elements/rookB.png',
+        };
+        this.element = createElement(this.type, color, id, shape[color]);
     }
 
+    function pawn(color, id) {
+        Figure.call(this, color, id);
+        this.type = 'pawn';
+        const shape = {
+            white: 'elements/pawnW.svg',
+            black: 'elements/pawnB.svg',
+        };
+        this.element = createElement(this.type, color, id, shape[color]);
+    }
+
+//PROTOTYPES
     Figure.prototype = {
-       // getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
+        getMoves: ()=> {throw "Figure moves not defined";}, //turned on after building a Figures prototypes
         setActive: function () { this.element.classList.add('active'); return this; },
-        getMoves: function(fieldNo) {App.gameRules.getMoves(fieldNo);},
     };
 
-    function Rook(type, color, id) {
-        Figure.call(this, type, color, id);
-    }
+    rook.prototype = Object.create(Figure.prototype);
+    rook.prototype.constructor = rook;
+    rook.prototype.getMoves = function (fieldNo) {
+        App.gameRules.getMoves(fieldNo, this);
+    };
 
-    function createElement(type, color, id) {
+    pawn.prototype = Object.create(Figure.prototype);
+    pawn.prototype.constructor = pawn;
+    pawn.prototype.getMoves = function (fieldNo) {
+        App.gameRules.getMoves(fieldNo, this);
+    };
+ 
+//OTHER
+    function createElement(type, color, id, shape) {
         let element = document.createElement('img');
-        element.src = figureTypes[type].shape[color];
+        element.src = shape;
         element.classList.add(color);
         element.id = `${id}`;
         element.type = `${type}`;
@@ -39,25 +70,9 @@ App.figures = (function() {
         return element;
     }
 
-   //class Pawn extends Figure {};
-
-    const elementsPath = 'elements/';
-    const figureTypes = {
-        pawn: {
-            shape: {
-                white: elementsPath + 'pawnW.svg',
-                black: elementsPath + 'pawnB.svg',
-            }
-        },
-        rook: {
-            shape: {
-                white: elementsPath + 'rookW2.png',
-                black: elementsPath + 'rookB.png',
-            }
-        }
-    };
-
     return {
         Figure,
+        rook,
+        pawn,
     };
 })();

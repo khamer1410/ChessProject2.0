@@ -13,7 +13,9 @@ App.gameStart = (function() {
 
     startForm.addEventListener('submit',(e)=> {
         e.preventDefault();
-        setCustomGame();
+        if (window.confirm('Do You want to start a new game? Previous results will be lost!')) {
+            setCustomGame();
+        }
     });
   
 //FUNCTIONS
@@ -23,7 +25,6 @@ App.gameStart = (function() {
     }
 
     function setCustomGame() {     
-
         //new settings & validation
         const fieldsNo = startForm.querySelector('#fieldsCount').value;
         const pawn = startForm.querySelector('#pawnCount').value;
@@ -31,6 +32,7 @@ App.gameStart = (function() {
         figuresInGame.pawn = pawn;
         figuresInGame.rook = rook;
         if (!validateForm(fieldsNo)) return;
+
 
         //start new game
         deleteBoard();
@@ -72,8 +74,8 @@ App.gameStart = (function() {
         for (let j = 0; j < figuresArrLength; j++) {
             let randomNo = randomFrom(0, fieldsSize - 1);
             let startPostion = fieldsArr[randomNo];     
-            let piece = new App.figures.Figure(figuresArr[j], ( j % 2 ? 'black' : 'white' ), j);
-//Tutaj kreowanie figur różnych klas w zależności od nazwy z figuresArr.
+            let piece = new App.figures[figuresArr[j]](( j % 2 ? 'black' : 'white' ), j);
+            
             if (startPostion.pawn) {
                 j--;
                 continue;

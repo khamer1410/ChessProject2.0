@@ -14,26 +14,27 @@ App.gameRules = (function() {
     function pickFigure(figure) {
         if (figure.tagName !== 'IMG') return;
         if (figure.parentNode === null) return;     
-        clearFieldsSelection();
+        App.gameStart.gameBoard().clearFieldsSelection();
         
         //Game operations
         const figureFieldNo = figure.parentNode.getAttribute('data-id');
         activeFieldWithFigure = gameBoard.fields[figureFieldNo];
         const figureOnField = gameBoard.fields[figureFieldNo].pawn;
-        figureOnField.setActive();
-        figureOnField.getMoves(figureFieldNo);
+        figureOnField.setActive()
+                    .getMoves(figureFieldNo);
     }
 
     function moveFigure(clickedField) {
         if (!activeFieldWithFigure) return;
         let fieldNo = null;
-        clickedField.tagName === 'IMG' ? fieldNo = clickedField.parentNode.getAttribute('data-id') : fieldNo = clickedField.getAttribute('data-id');
+        (clickedField.tagName === 'IMG') ? fieldNo = clickedField.parentNode.getAttribute('data-id') : fieldNo = clickedField.getAttribute('data-id');
         const clickedFieldData = gameBoard.fields[fieldNo];
 
         if (!isMoveLegal(clickedFieldData)) return;    
 
         if (clickedFieldData.pawn) {
-            (activeFieldWithFigure.pawn.color !== clickedFieldData.pawn.color) ? attackFigure(activeFieldWithFigure, clickedFieldData) : pickFigure(clickedFieldData.td);
+            (activeFieldWithFigure.pawn.color !== clickedFieldData.pawn.color) ? 
+            attackFigure(activeFieldWithFigure, clickedFieldData) : pickFigure(clickedFieldData.td);
 
         } else {
             //Change View
@@ -44,37 +45,26 @@ App.gameRules = (function() {
             delete activeFieldWithFigure.pawn;
             //clear board state
             activeFieldWithFigure = null;
-            clearFieldsSelection();
+            App.gameStart.gameBoard().clearFieldsSelection();
         }
     }
 
     function attackFigure(activeFigure, clickedFigure) {
+        
         //ChangeView
-        clickedFigure.pawn.element.remove();
-        clickedFigure.td.appendChild(activeFigure.pawn.element);
+        clickedFigure.removePawn();
+        clickedFigure.addPawn(activeFigure.pawn.element);
         //Change Model
         clickedFigure.pawn = activeFigure.pawn;
         delete activeFigure.pawn;
         //clear board state
         activeFieldWithFigure = null;
-        clearFieldsSelection();
+        App.gameStart.gameBoard().clearFieldsSelection();
     }
 
 //ADDITIONAL FUNCTIONS
     function isMoveLegal(checkingField) {
        return (checkingField.td.classList.contains('checkField-avaliable') || checkingField.td.classList.contains('checkField-enemy'));
-    }
-
-    function clearFieldsSelection() {
-        const activeFigure = document.querySelector('.active');
-        if (activeFigure) { activeFigure.classList.remove('active'); }
-
-        document.querySelectorAll("[class*=checkField]").forEach((field) => {
-            field.classList.remove('checkField-avaliable');
-            field.classList.remove('checkField-friendly');
-            field.classList.remove('checkField-enemy');
-              //    document.querySelectorAll("[class*=checkField]").forEach((field) => { field.classList.remove(/^.checkField\w*/);}); //trying to validete section above using RegExp...
-        });
     }
 
     //Numbers are count from 0!
@@ -90,28 +80,51 @@ App.gameRules = (function() {
         };
     }
 
-//PROTOTYPES
-//NIE DZIAŁA :(
-    // App.figures.Figure.prototype = {
-    //     getMoves: getMoves,
-    //     //getMoves: throw "Figure moves not defined", //turn on after building a Figures prototypes
-    //     setActive: function () { this.element.classList.add('active'); return this; },
-    // };
-
-
-    function getMoves(fieldNo) {
+//MOVES
+    function getMoves(fieldNo, activeFigure) {
         const position = getPosition(fieldNo);
         const fieldIndex = getFieldNo(position.row, position.col);
-        const activeFigure = gameBoard.fields[fieldIndex].pawn;
 
-        getMovesDown(position, activeFigure);
-        getMovesUp(position, activeFigure);
-        getMovesLeft(position, activeFigure);
-        getMovesRight(position, activeFigure);
+        let movesOptions = "";
+        switch (activeFigure.type) {
+            case 'pawn':
+                switch (activeFigure.color) {
+                    case 'white':
+                        movesOptions = {
+                            up: (position.row === 0) ? 0 : 1,
+                            right: (position.col === 7) ? 0 : 1,
+                            down: 0,
+                            left: (position.col === 0) ? 0 : 1,
+                        }; 
+                        break;
+                    case 'black':
+                        movesOptions = {
+                            up: 0,
+                            right: (position.col === 7) ? 0 : 1,
+                            down: (position.row === App.board.getRowNumber()) ? 0 : 1,
+                            left: (position.col === 0) ? 0 : 1,
+                        };
+                        break;
+                }
+                break;
+            case 'rook':
+                movesOptions = {
+                    up: position.row,
+                    right: 7 - position.col /*Magic number - chessBoard always has 8 col */,
+                    down: App.board.getRowNumber() - position.row,
+                    left: position.col
+                };
+                break;
+        }
+
+        getMovesDown(position, movesOptions, activeFigure);
+        getMovesUp(position, movesOptions, activeFigure);
+        getMovesLeft(position, movesOptions, activeFigure);
+        getMovesRight(position, movesOptions, activeFigure);
     }
 
-    function getMovesDown(position, figure) {
-        for (let i = 1; i <= App.board.getRowNumber() - position.row; i++) {
+    function getMovesDown(position, moves, figure) {
+        for (let i = 1; i <= moves.down; i++) {
             let checkingRow = position.row + i;
             let checkingFieldNo = getFieldNo(checkingRow, position.col);
             let checkingField = gameBoard.fields[checkingFieldNo];
@@ -120,8 +133,8 @@ App.gameRules = (function() {
         } 
     }
 
-    function getMovesUp(position, figure) {
-        for (let i = 1; i <= position.row; i++) {
+    function getMovesUp(position, moves, figure) {
+        for (let i = 1; i <= moves.up; i++) {
             let checkingRow = position.row - i;
             let checkingFieldNo = getFieldNo(checkingRow, position.col);
             let checkingField = gameBoard.fields[checkingFieldNo];
@@ -130,8 +143,8 @@ App.gameRules = (function() {
         }
     }
 
-    function getMovesLeft(position, figure) {
-        for (let i = 1; i <= position.col; i++) {
+    function getMovesLeft(position, moves, figure) {
+        for (let i = 1; i <= moves.left; i++) {
             let checkingCol = position.col - i;
             let checkingFieldNo = getFieldNo(position.row, checkingCol);
             let checkingField = gameBoard.fields[checkingFieldNo];
@@ -140,8 +153,8 @@ App.gameRules = (function() {
         }
     }
 
-    function getMovesRight(position, figure) {
-        for (let i = 1; i <= 7 - position.col; i++) {
+    function getMovesRight(position, moves, figure) {
+        for (let i = 1; i <= moves.right; i++) {
             let checkingCol = position.col + i;
             let checkingFieldNo = getFieldNo(position.row, checkingCol);
             let checkingField = gameBoard.fields[checkingFieldNo];
@@ -151,19 +164,15 @@ App.gameRules = (function() {
     }
 
     function isFieldAvaliable(checkingField, figure) {
-        checkingField.td.classList.add('checkField-avaliable');
+        checkingField.addClass('checkField-avaliable');
         let isAvaliable = true;
         if (checkingField.pawn) {
-            checkingField.pawn.color === figure.color ? checkingField.td.classList.add('checkField-friendly') : checkingField.td.classList.add('checkField-enemy');
+            checkingField.pawn.color === figure.color ? checkingField.addClass('checkField-friendly') : checkingField.addClass('checkField-enemy');
             isAvaliable = false;
         }
         return isAvaliable;
     }
-        
-    // Figure.pawn.prototype = {
-    //     sayHi : ()=> alert('hi'),
-    // }
-//prototyp figure.pawn, figur.rook
+    
     return {
         getPosition,
         getFieldNo,

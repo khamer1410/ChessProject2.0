@@ -60,6 +60,26 @@
     background: #607d8b;
   }
 
+  .tools-section h2 {
+    margin-top: 0;
+  }
+
+  .submit-btn {
+    margin: 5px;
+    padding: 10px;
+    background: #8BC34A;
+    border: none;
+    text-transform: uppercase;
+    font-family: cursive;
+    transition: 0.5s;
+  }
+
+  .submit-btn:hover {
+    background: black;
+    color: white;
+    cursor: pointer;
+  }
+
 /*Fields*/
   #board {
     background: grey;
@@ -128,4 +148,5 @@
   .checkField-friendly img {
     cursor: not-allowed;
 }
+
 
